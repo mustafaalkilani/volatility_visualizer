@@ -2,16 +2,14 @@ let data = [];
 let cy;
 let selectedNodes = [];
 
-// Enhanced process type classification
 const typeColors = {
-  system: '#64ffda',     // Cyan - Core system processes
-  service: '#6bcf7f',    // Green - System services
-  user: '#ffd93d',       // Yellow - User applications
-  orphan: '#ff9800',     // Orange - Orphaned processes
-  exited: '#9e9e9e'      // Gray - Exited processes
+  system: '#64ffda',
+  service: '#6bcf7f',    
+  user: '#ffd93d',       
+  orphan: '#ff9800',     
+  exited: '#9e9e9e'  
 };
 
-// Load data from JSON file
 async function loadData() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -36,19 +34,15 @@ async function loadData() {
   }
 }
 
-// Classify process types based on various criteria
 function classifyProcess(proc) {
-  // Exited processes
   if (proc.ExitTime && proc.ExitTime !== "N/A") {
     return 'exited';
   }
   
-  // Core system processes
   if (proc.pid === 4 || proc.ImageFileName === "System" || proc.ImageFileName === "Registry") {
     return 'system';
   }
   
-  // System services (usually children of services.exe or running in session 0)
   if (proc.ImageFileName.includes('svchost.exe') || 
       proc.ImageFileName.includes('services.exe') ||
       proc.ImageFileName.includes('lsass.exe') ||
@@ -60,38 +54,32 @@ function classifyProcess(proc) {
     return 'service';
   }
   
-  // User applications (usually in session 1 or higher)
   if (proc.SessionId > 0) {
     return 'user';
   }
   
-  // Check if process is orphaned (parent doesn't exist in our data)
   if (proc.ppid && !data.find(p => p.pid === proc.ppid)) {
     return 'orphan';
   }
   
-  return 'service'; // Default
+  return 'service';
 }
 
-// Enhanced tree structure analysis
 function analyzeProcessTree() {
   const processMap = new Map(data.map(p => [p.pid, { ...p, children: [] }]));
   const roots = [];
   const orphans = [];
   
-  // Build parent-child relationships and identify roots/orphans
   data.forEach(proc => {
     const processData = processMap.get(proc.pid);
     
     if (proc.ppid === 0 || !processMap.has(proc.ppid)) {
-      // Root process or orphaned process
       if (proc.ppid === 0) {
         roots.push(processData);
       } else {
         orphans.push(processData);
       }
     } else {
-      // Child process - add to parent's children
       const parent = processMap.get(proc.ppid);
       if (parent) {
         parent.children.push(processData);
@@ -109,13 +97,11 @@ async function initializeCytoscape() {
     return;
   }
   
-  // Load data first
   const dataLoaded = await loadData();
   if (!dataLoaded) {
     return;
   }
   
-  // Try to register dagre extension
   if (typeof cytoscape.use === 'function') {
     try {
       if (window.cytoscapeDagre) {
@@ -131,19 +117,16 @@ async function initializeCytoscape() {
   const { processMap, roots, orphans } = analyzeProcessTree();
   const elements = [];
   
-  // Build nodes + edges
   data.forEach(proc => {
     const processType = classifyProcess(proc);
     const hasChildren = data.some(p => p.ppid === proc.pid);
     
-    // Create node
     elements.push({
       data: {
         id: String(proc.pid),
         label: `${proc.ImageFileName}\n(PID: ${proc.pid})`,
         type: processType,
         hasChildren: hasChildren,
-        // Keep all the original data for the sidebar
         name: proc.ImageFileName,
         pid: proc.pid,
         ppid: proc.ppid,
@@ -161,7 +144,6 @@ async function initializeCytoscape() {
       classes: hasChildren ? 'parent-node' : 'leaf-node'
     });
     
-    // Create edge if parent exists
     if (proc.ppid && data.find(p => p.pid === proc.ppid)) {
       elements.push({
         data: {
@@ -173,7 +155,6 @@ async function initializeCytoscape() {
     }
   });
   
-  // Initialize Cytoscape
   cy = cytoscape({
     container: document.getElementById('cy'),
     elements: elements,
@@ -266,35 +247,30 @@ async function initializeCytoscape() {
     ],
     layout: {
       name: (typeof cytoscapeDagre !== 'undefined' || window.cytoscapeDagre) ? 'dagre' : 'breadthfirst',
-      rankDir: 'TB',   // Tree grows top → bottom
+      rankDir: 'TB',
       nodeSep: 50,
       rankSep: 100,
       spacingFactor: 1.2
     },
-    wheelSensitivity: 0.2,  // Lower = less sensitive (smoother zoom)
+    wheelSensitivity: 0.2,
     maxZoom: 5,
     minZoom: 0.1
   });
 
-  // Enhanced event handlers
   setupEnhancedEventHandlers();
 }
 
 function setupEnhancedEventHandlers() {
-  // Node click handler with tree navigation
   cy.on('tap', 'node', evt => {
     const node = evt.target;
     selectedNodes = [node];
     
-    // Highlight the selected node and its immediate family
     cy.elements().removeClass('highlighted child-highlighted parent-highlighted');
     node.addClass('highlighted');
     
-    // Highlight children
     const children = node.outgoers().nodes();
     children.addClass('child-highlighted');
     
-    // Highlight parent
     const parent = node.incomers().nodes();
     parent.addClass('parent-highlighted');
     
@@ -303,7 +279,6 @@ function setupEnhancedEventHandlers() {
     updateStatistics();
   });
 
-  // Double-click to focus on subtree
   cy.on('dblclick', 'node', evt => {
     const node = evt.target;
     const subtree = node.union(node.successors());
@@ -327,7 +302,6 @@ function setupEnhancedEventHandlers() {
     }
   });
 
-  // Right-click context menu simulation
   cy.on('cxttap', 'node', evt => {
     const nodeData = evt.target.data();
     const hasChildren = nodeData.hasChildren;
@@ -352,7 +326,6 @@ function setupEnhancedEventHandlers() {
     showToast(message);
   });
 
-  // Background click to deselect
   cy.on('tap', evt => {
     if (evt.target === cy) {
       selectedNodes = [];
@@ -363,7 +336,6 @@ function setupEnhancedEventHandlers() {
   });
 }
 
-// Enhanced process details display
 function updateProcessDetails(data) {
   const detailsDiv = document.getElementById('processDetails');
   const childCount = cy.getElementById(data.id).outgoers().nodes().length;
@@ -440,7 +412,6 @@ function updateProcessDetails(data) {
   `;
 }
 
-// Enhanced statistics calculation
 function updateStatistics() {
   const totalCount = data.length;
   const runningCount = data.filter(p => !p.ExitTime || p.ExitTime === "N/A").length;
@@ -480,7 +451,6 @@ function calculateMaxDepth() {
 }
 
 function setupEventListeners() {
-  // Reset view with smart fitting
   document.getElementById('resetBtn').addEventListener('click', () => {
     cy.elements().removeClass('highlighted child-highlighted parent-highlighted');
     cy.fit();
@@ -491,12 +461,10 @@ function setupEventListeners() {
     showToast('View reset - showing full process tree');
   });
 
-  // Toggle info panel
   document.getElementById('infoBtn').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('active');
   });
 
-  // Enhanced export functionality
   document.getElementById('exportBtn').addEventListener('click', () => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const png64 = cy.png({
@@ -514,7 +482,6 @@ function setupEventListeners() {
     showToast('Process tree exported with timestamp');
   });
 
-  // Enhanced search with tree traversal
   let searchTimeout = null;
   document.getElementById('searchBox').addEventListener('input', (e) => {
     const query = e.target.value.toLowerCase().trim();
@@ -537,11 +504,9 @@ function setupEventListeners() {
     if (matchingNodes.length > 0) {
       matchingNodes.addClass('highlighted');
 
-      // Get all descendants (children, grandchildren, etc.)
       const descendants = matchingNodes.successors().nodes();
       descendants.addClass('child-highlighted');
 
-      // Get all ancestors (parents, grandparents, etc.)
       const ancestors = matchingNodes.predecessors().nodes();
       ancestors.addClass('parent-highlighted');
 
@@ -549,13 +514,11 @@ function setupEventListeners() {
 
       searchTimeout = setTimeout(() => {
         if (matchingNodes.length === 1 && descendants.length === 0) {
-          // Single leaf node
           cy.animate({
             center: { eles: matchingNodes },
             zoom: 1.5,
           }, { duration: 500 });
         } else {
-          // Multiple nodes or nodes with children
           cy.animate({
             fit: { eles: allRelevantNodes, padding: 80 }
           }, { duration: 500 });
@@ -575,7 +538,6 @@ function setupEventListeners() {
     }
   });
 
-  // Advanced keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.metaKey) {
       switch (e.key) {
@@ -602,7 +564,6 @@ function setupEventListeners() {
   });
 }
 
-// Enhanced toast function with different types
 function showToast(message, type = 'info', duration = 3000) {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -610,7 +571,6 @@ function showToast(message, type = 'info', duration = 3000) {
   toast.textContent = message;
   toast.className = `toast show ${type}`;
   
-  // Add some basic styling for different types
   const colors = {
     info: '#2196f3',
     success: '#4caf50',
@@ -625,7 +585,6 @@ function showToast(message, type = 'info', duration = 3000) {
   }, duration);
 }
 
-// Initialize the application when the page loads
 document.addEventListener('DOMContentLoaded', init);
 
 function init() {

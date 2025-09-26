@@ -10,11 +10,9 @@ const progressContainer = document.getElementById('progressContainer');
 const progressBar = document.getElementById('progressBar');
 let selectedFile = null;
 let processedFileName = null;
-// Upload area click handler
 uploadArea.addEventListener('click', () => {
     fileInput.click();
 });
-// Drag and drop handlers
 uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadArea.classList.add('dragover');
@@ -31,7 +29,6 @@ uploadArea.addEventListener('drop', (e) => {
         handleFileSelect(files[0]);
     }
 });
-// File input change handler
 fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
         handleFileSelect(e.target.files[0]);
@@ -44,12 +41,10 @@ function handleFileSelect(file) {
     }
     selectedFile = file;
     
-    // Show file info
     fileName.textContent = file.name;
     fileSize.textContent = formatFileSize(file.size);
     fileInfo.style.display = 'flex';
     
-    // Enable upload button
     uploadBtn.disabled = false;
     
     hideMessage();
@@ -61,17 +56,14 @@ function formatFileSize(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
-// Upload button handler
 uploadBtn.addEventListener('click', async () => {
     if (!selectedFile) return;
     const formData = new FormData();
     formData.append('file', selectedFile);
-    // Show progress
     progressContainer.style.display = 'block';
     uploadBtn.disabled = true;
     uploadBtn.textContent = 'Processing...';
     try {
-        // Simulate progress animation
         let progress = 0;
         const progressInterval = setInterval(() => {
             progress += Math.random() * 30;
@@ -106,7 +98,6 @@ uploadBtn.addEventListener('click', async () => {
         progressBar.style.width = '0%';
     }, 1000);
 });
-// Visualize button handler
 visualizeBtn.addEventListener('click', () => {
     if (processedFileName) {
         window.location.href = `/visualizer?data=${encodeURIComponent(processedFileName)}`;
