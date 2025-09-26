@@ -32,14 +32,23 @@ Upload a `.txt` file containing Volatility process scan results, and the app wil
 ## 📂 Project Structure
 .
 ├── app.py # Flask backend
+
 ├── templates/
+
 │ ├── upload.html # Upload page
+
 │ ├── visualizer.html # Visualization page
+
 ├── static/
+
 │ ├── script.js # Cytoscape rendering & logic
+
 │ ├── upload.js # Upload handling
+
 │ ├── styles.css # Visualization styles
+
 │ ├── upload.css # Upload page styles
+
 ├── uploads/ # Processed uploads & JSON output
 
 ---
@@ -83,12 +92,11 @@ Click Open Visualizer to explore the process tree.
 Upload page:
 
 Visualization page:
-
+  ![alt text](process_tree_2025-09-26T11-41-12-103Z.png)
 🧪 Example JSON Output
 After parsing, a .json file is created inside uploads/:
 
 ```json
-Copy code
 [
   {
     "pid": 4,
