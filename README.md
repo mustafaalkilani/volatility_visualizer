@@ -1,7 +1,7 @@
 # 🧩 Volatility Process Tree Visualizer
 
 An interactive **Flask + Cytoscape.js** web app to visualize process trees from **Volatility's `psscan` output**.  
-Upload a `.txt` file containing Volatility process scan results, and the app will parse it into JSON and render an **interactive process tree diagram**.
+Upload a `.txt` file containing Volatility process scan results, and the app will parse it into JSON and render an **interactive process tree diagram**. And integrated with LLM to know what is every **process**
 
 ---
 
@@ -68,9 +68,13 @@ venv\Scripts\activate      # Windows
 ```
 3️⃣ Install Dependencies
 ```bash
-pip install flask werkzeug
+pip install -r requirements.txt
 ```
-4️⃣ Run the App
+4️⃣ Add API key
+```bash
+export GOOGLE_API_KEY="your google aistudio API KEY"
+```
+5️⃣ Run the App
 ```bash
 python app.py
 ```
