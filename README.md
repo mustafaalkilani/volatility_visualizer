@@ -32,18 +32,24 @@ Upload a `.txt` file containing Volatility process scan results, and the app wil
 ## 📂 Project Structure
 .
 ├── app.py # Flask backend
-├── templates/
-│ ├── upload.html # Upload page
-│ ├── visualizer.html # Visualization page
-├── static/
-│ ├── script.js # Cytoscape rendering & logic
-│ ├── upload.js # Upload handling
-│ ├── styles.css # Visualization styles
-│ ├── upload.css # Upload page styles
-├── uploads/ # Processed uploads & JSON output
 
-yaml
-Copy code
+├── templates/
+
+│ ├── upload.html # Upload page
+
+│ ├── visualizer.html # Visualization page
+
+├── static/
+
+│ ├── script.js # Cytoscape rendering & logic
+
+│ ├── upload.js # Upload handling
+
+│ ├── styles.css # Visualization styles
+
+│ ├── upload.css # Upload page styles
+
+├── uploads/ # Processed uploads & JSON output
 
 ---
 
@@ -53,28 +59,29 @@ Copy code
 ```bash
 git clone https://github.com/yourusername/volatility-visualizer.git
 cd volatility-visualizer
+```
 2️⃣ Create Virtual Environment (optional but recommended)
-bash
-Copy code
+```bash
 python3 -m venv venv
 source venv/bin/activate   # Linux/Mac
 venv\Scripts\activate      # Windows
+```
 3️⃣ Install Dependencies
-bash
-Copy code
+```bash
 pip install flask werkzeug
+```
 4️⃣ Run the App
-bash
-Copy code
+```bash
 python app.py
+```
 Default server runs at 👉 http://127.0.0.1:5000
 
 📖 Usage
 Generate Volatility psscan output:
 
-bash
-Copy code
+```bash
 volatility3 -f memory.vmem windows.psscan > output.txt
+```
 Open the app in your browser: http://localhost:5000
 
 Upload output.txt
