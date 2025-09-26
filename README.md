@@ -32,23 +32,14 @@ Upload a `.txt` file containing Volatility process scan results, and the app wil
 ## 📂 Project Structure
 .
 ├── app.py # Flask backend
-
 ├── templates/
-
 │ ├── upload.html # Upload page
-
 │ ├── visualizer.html # Visualization page
-
 ├── static/
-
 │ ├── script.js # Cytoscape rendering & logic
-
 │ ├── upload.js # Upload handling
-
 │ ├── styles.css # Visualization styles
-
 │ ├── upload.css # Upload page styles
-
 ├── uploads/ # Processed uploads & JSON output
 
 ---
@@ -96,7 +87,7 @@ Visualization page:
 🧪 Example JSON Output
 After parsing, a .json file is created inside uploads/:
 
-json
+```json
 Copy code
 [
   {
@@ -110,6 +101,7 @@ Copy code
   },
   ...
 ]
+```
 📝 Notes
 Only .txt files are allowed.
 
