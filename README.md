@@ -57,7 +57,7 @@ Upload a `.txt` file containing Volatility process scan results, and the app wil
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/volatility-visualizer.git
+git clone https://github.com/mustafaalkilani/volatility_visualizer.git
 cd volatility-visualizer
 ```
 2️⃣ Create Virtual Environment (optional but recommended)
