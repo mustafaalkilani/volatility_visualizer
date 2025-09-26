@@ -1,7 +1,6 @@
 let data = [];
 let cy;
 let selectedNodes = [];
-
 const typeColors = {
   system: '#64ffda',
   service: '#6bcf7f',    
@@ -139,7 +138,10 @@ async function initializeCytoscape() {
         exitTime: proc.ExitTime,
         fileOutput: proc.FileOutput,
         isRoot: proc.ppid === 0 || !data.find(p => p.pid === proc.ppid),
-        isOrphan: proc.ppid !== 0 && !data.find(p => p.pid === proc.ppid)
+        isOrphan: proc.ppid !== 0 && !data.find(p => p.pid === proc.ppid),
+        description: proc.description,
+        suspicious: proc.suspicious,
+        reason: proc.reason
       },
       classes: hasChildren ? 'parent-node' : 'leaf-node'
     });
@@ -390,9 +392,24 @@ function updateProcessDetails(data) {
         </div>
       ` : ''}
       
-      <div class="info-item" style="margin-bottom: 15px;">
+      <div class="info-item long-text">
+        <span class="info-label">Description:</span>
+        <span class="info-value">${data.description}</span>
+      </div>
+      
+      <div class="info-item long-text suspicious">
+        <span class="info-label">Suspicious:</span>
+        <span class="info-value">${data.suspicious}</span>
+      </div>
+      
+      <div class="info-item long-text reason">
+        <span class="info-label">Reason:</span>
+        <span class="info-value">${data.reason}</span>
+      </div>
+      
+      <div class="info-item long-text memory-offset">
         <span class="info-label">Memory Offset:</span>
-        <span class="info-value" style="font-size: 10px; word-break: break-all;">${data.offset}</span>
+        <span class="info-value">${data.offset}</span>
       </div>
       
       ${data.isOrphan ? `
