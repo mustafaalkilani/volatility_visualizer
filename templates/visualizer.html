@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Tree Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-dagre/2.4.0/cytoscape-dagre.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Loading Overlay -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>🌳 Process Tree Visualizer</h1>
+            <div class="controls">
+                <input type="text" id="searchBox" class="search-box" placeholder="Search processes...">
+                <button class="btn" id="resetBtn">Reset View</button>
+                <button class="btn" id="exportBtn">Export PNG</button>
+                <button class="btn" id="infoBtn">Info Panel</button>
+                <button class="btn danger" id="backBtn">← Back</button>
+            </div>
+        </div>
+
+        <!-- Statistics Panel -->
+        <div class="stats">
+            <h3>Statistics</h3>
+            <div class="stat-item">
+                <span>Total Processes:</span>
+                <span class="stat-value" id="totalProcesses">0</span>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <h3>Process Details</h3>
+            <div id="processDetails">
+                <p>Select a process node to view details</p>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #64ffda;"></div>
+                <span>System Processes</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #6bcf7f;"></div>
+                <span>Services</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ffd93d;"></div>
+                <span>User Applications</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ff9800;"></div>
+                <span>Orphaned Processes</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9e9e9e;"></div>
+                <span>Exited Processes</span>
+            </div>
+        </div>
+
+        <!-- Cytoscape Container -->
+        <div id="cy"></div>
+
+        <!-- Toast Notifications -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        // Get data file from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataFile = urlParams.get('data');
+        
+        if (!dataFile) {
+            alert('No data file specified');
+            window.location.href = '/';
+        }
+
+        // Back button handler
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.location.href = '/';
+        });
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

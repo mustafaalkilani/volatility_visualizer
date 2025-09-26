@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volatility Process Tree Analyzer</title>
+<link rel="stylesheet" href="../static/upload.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Process Tree Analyzer</h1>
+            <p>Upload your Volatility process scan output to visualize the process tree with an interactive graph</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔍</div>
+                <h3>Smart Analysis</h3>
+                <p>Automatically parses process relationships and metadata</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌳</div>
+                <h3>Tree Visualization</h3>
+                <p>Interactive graph showing parent-child relationships</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>Color Coding</h3>
+                <p>Different colors for system, user, and orphaned processes</p>
+            </div>
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Drop your Volatility scan file here</div>
+            <div class="upload-subtext">or click to browse (.txt files only)</div>
+        </div>
+
+        <input type="file" id="fileInput" accept=".txt">
+
+        <div class="file-info" id="fileInfo">
+            <div class="file-icon">📄</div>
+            <div class="file-details">
+                <h3 id="fileName"></h3>
+                <p id="fileSize"></p>
+            </div>
+        </div>
+
+        <div class="progress" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="buttons">
+            <button class="btn" id="uploadBtn" disabled>Upload & Analyze</button>
+            <button class="btn success" id="visualizeBtn" style="display: none;">Open Visualizer</button>
+        </div>
+    </div>
+
+    <script src="../static/upload.js">
+    </script>
+</body>
+</html>

@@ -92,7 +92,7 @@ Click Open Visualizer to explore the process tree.
 Upload page:
 
 Visualization page:
-  ![alt text](process_tree_2025-09-26T11-41-12-103Z.png)
+  ![alt text](process_tree_2025-09-26T13-01-39-515Z.png)
 🧪 Example JSON Output
 After parsing, a .json file is created inside uploads/:
 
