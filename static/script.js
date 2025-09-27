@@ -6,7 +6,8 @@ const typeColors = {
   service: '#6bcf7f',    
   user: '#ffd93d',       
   orphan: '#ff9800',     
-  exited: '#9e9e9e'  
+  exited: '#9e9e9e',
+  sus: 'rgba(255, 0, 51, 0.6)'
 };
 
 async function loadData() {
@@ -171,7 +172,7 @@ async function initializeCytoscape() {
           'text-halign': 'center',
           'background-color': function(node) {
             const type = node.data('type');
-            return typeColors[type] || typeColors.service;
+            return node.data('suspicious') == true ? typeColors.sus: typeColors[type];
           },
           'shape': 'roundrectangle',
           'width': '130px',
@@ -241,6 +242,14 @@ async function initializeCytoscape() {
         style: {
           'background-color': '#ffb3ba',
           'border-color': '#ff9aa2',
+          'border-width': '3px',
+          'opacity': '0.9',
+          'z-index': 50
+        },
+        selector: '.sus',
+        style: {
+          'background-color': '#ff0019ff',
+          'border-color': '#ff0015ff',
           'border-width': '3px',
           'opacity': '0.9',
           'z-index': 50
